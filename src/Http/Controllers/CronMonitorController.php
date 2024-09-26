@@ -2,11 +2,9 @@
 
 namespace JkOster\Http\Controllers;
 
-use JkOster\CronMonitor\Models\Monitor;
 use Illuminate\Http\Request;
-use JkOster\CronMonitor\Facades\CronMonitor;
-use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
+use JkOster\CronMonitor\Models\Monitor;
 
 class CronMonitorController extends Controller
 {
@@ -33,6 +31,7 @@ class CronMonitorController extends Controller
 
             return response()->json(['message' => 'pong', 'status' => $newStatus], 200);
         }
+
         return response()->json(['message' => 'not found'], 404);
     }
 
@@ -42,6 +41,7 @@ class CronMonitorController extends Controller
         if ($monitor) {
             return response()->json(['message' => $monitor->status]);
         }
+
         return response()->json(['message' => 'not found']);
     }
 }

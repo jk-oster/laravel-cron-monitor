@@ -2,8 +2,8 @@
 
 namespace JkOster\CronMonitor;
 
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class MonitorCollection extends Collection
 {
@@ -14,7 +14,6 @@ class MonitorCollection extends Collection
         foreach ($this->items as $monitor) {
 
             /** @var CronMonitor $monitor */
-            
             if ($force || $monitor->shouldCheckDown()) {
                 $monitor->checkHealthStatus($now);
             }

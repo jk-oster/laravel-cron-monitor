@@ -2,39 +2,30 @@
 
 namespace JkOster\CronMonitor\Notifications\Notifications;
 
-use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Events\CronCheckRecoveredEvent;
-use JkOster\CronMonitor\Models\Monitor;
 use Carbon\Carbon;
-use Illuminate\Bus\Queueable;
-
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Spatie\UptimeMonitor\Helpers\Period;
 use Illuminate\Notifications\Messages\VonageMessage;
-use Filament\Notifications\Notification as FilamentNotification;
-use Filament\Notifications\Actions\Action;
+use Illuminate\Notifications\Notification;
+use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
+use JkOster\CronMonitor\Models\Monitor;
 use JkOster\CronMonitor\Notifications\BaseNotification;
-
+use Spatie\UptimeMonitor\Helpers\Period;
 
 class CronCheckRecovered extends BaseNotification
 {
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Monitor $monitor, public Period $downtimePeriod)
-    {
-    }
+    public function __construct(public Monitor $monitor, public Period $downtimePeriod) {}
 
     /**
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $mailMessage = (new MailMessage())
+        $mailMessage = (new MailMessage)
             ->success()
             ->subject($this->getMessageText())
             ->line($this->getMessageText());
@@ -48,7 +39,7 @@ class CronCheckRecovered extends BaseNotification
 
     public function toSlack(object $notifiable): SlackMessage
     {
-        return (new SlackMessage())
+        return (new SlackMessage)
             ->success()
             ->attachment(function (SlackAttachment $attachment) {
                 $attachment
@@ -65,8 +56,8 @@ class CronCheckRecovered extends BaseNotification
     public function toVonage(object $notifiable): VonageMessage
     {
         return (new VonageMessage)
-                    ->content($this->getMessageText() . "\n" . implode("\n", $this->getAddtionalLines()))
-                    ->unicode();
+            ->content($this->getMessageText()."\n".implode("\n", $this->getAddtionalLines()))
+            ->unicode();
     }
 
     public function toArray(object $notifiable): array
@@ -81,7 +72,7 @@ class CronCheckRecovered extends BaseNotification
 
     protected function getMessageText(bool $withEmoji = true): string
     {
-        return ($withEmoji ? "{$this->monitor->status_as_emoji} " : '') . "{$this->monitor->name} has recovered after {$this->downtimePeriod->duration()}";
+        return ($withEmoji ? "{$this->monitor->status_as_emoji} " : '')."{$this->monitor->name} has recovered after {$this->downtimePeriod->duration()}";
     }
 
     protected function getAddtionalLines(): array

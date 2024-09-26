@@ -31,15 +31,15 @@ class ProcessCronCheck extends BaseCommand
         /** @var \JkOster\CronMonitor\MonitorCollection $cronMonitors */
         $cronMonitors = MonitorRepository::getEnabled();
 
-        $this->comment('Start checking health of ' . count($cronMonitors) . ' cron monitors...');
+        $this->comment('Start checking health of '.count($cronMonitors).' cron monitors...');
 
         $cronMonitors->checkHealth($force);
 
         $healthyMonitors = MonitorRepository::getHealthy();
-        $this->info('Found ' . count($healthyMonitors) . ' healthy cron monitors');
+        $this->info('Found '.count($healthyMonitors).' healthy cron monitors');
 
         $unhealthyMonitors = MonitorRepository::getUnhealthy();
-        $this->info('Found ' . count($unhealthyMonitors) . ' unhealthy cron monitors');
+        $this->info('Found '.count($unhealthyMonitors).' unhealthy cron monitors');
 
         $this->info('All done!');
     }

@@ -2,22 +2,21 @@
 
 namespace JkOster\CronMonitor\Models\Traits;
 
-use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
 use Carbon\Carbon;
 use Cron\CronExpression;
 use DateTime;
-use JkOster\CronMonitor\Helpers\Period;
+use Illuminate\Http\Request;
 use JkOster\CronMonitor\Events\CronCheckFailedEvent;
 use JkOster\CronMonitor\Events\CronCheckRecoveredEvent;
-use Illuminate\Http\Request;
-use JkOster\CronMonitor\Exceptions\InvalidPingStatusReceived;
-use JkOster\CronMonitor\Models\Monitor;
 use JkOster\CronMonitor\Events\IncomingPingReceived;
+use JkOster\CronMonitor\Exceptions\InvalidPingStatusReceived;
+use JkOster\CronMonitor\Helpers\Period;
+use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
+use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
+use JkOster\CronMonitor\Models\Monitor;
 
 trait SupportsCronHealthCheck
 {
-
     public static function bootSupportsMonitor(): void
     {
         static::saving(function (Monitor $monitor) {
@@ -26,11 +25,13 @@ trait SupportsCronHealthCheck
 
             if (is_null($monitor->status_last_change_date)) {
                 $monitor->status_last_change_date = Carbon::now($tz);
+
                 return;
             }
 
             if (is_null($monitor->next_due_date)) {
                 $monitor->next_due_date = $monitor->calculateNextDueDateWithGracePeriod($currentDateTime, $tz);
+
                 return;
             }
 
@@ -50,7 +51,7 @@ trait SupportsCronHealthCheck
 
     public function shouldCheckDown(): bool
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return false;
         }
 
@@ -66,24 +67,26 @@ trait SupportsCronHealthCheck
         return $this->next_due_date && $this->next_due_date->isPast();
     }
 
-    public function calculateNextDueDate(\DateTime|null $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
+    public function calculateNextDueDate(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
-        $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) :Carbon::now($tz);
+        $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) : Carbon::now($tz);
         if ($this->cron_expression && $this->last_check && CronExpression::isValidExpression($this->cron_expression)) {
             $cron = new CronExpression($this->cron_expression);
+
             return $cron->getNextRunDate($currentTime, $tz);
         } else {
             return $currentTime->addMinutes($this->frequency)->toDateTime();
         }
     }
 
-    public function calculateNextDueDateWithGracePeriod(\DateTime|null $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
+    public function calculateNextDueDateWithGracePeriod(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
         $nextDueDate = new Carbon($this->calculateNextDueDate($currentTime, $tz));
+
         return $nextDueDate->addMinutes($this->grace_period);
     }
 
-    public function cronMonitorStatusReceived(string $incomingPingStatus, Request $request = null): void
+    public function cronMonitorStatusReceived(string $incomingPingStatus, ?Request $request = null): void
     {
         $oldStatus = $this->status;
 
@@ -94,7 +97,7 @@ trait SupportsCronHealthCheck
             IncomingPingStatus::STARTED => CronMonitorStatus::STARTED,
         ];
 
-        if(!isset($statusMapping[$incomingPingStatus])) {
+        if (! isset($statusMapping[$incomingPingStatus])) {
             throw new InvalidPingStatusReceived($incomingPingStatus);
         }
 
@@ -102,7 +105,7 @@ trait SupportsCronHealthCheck
 
         $newStatus = $statusMapping[$incomingPingStatus];
         $tz = $this->timezone;
-        $now =Carbon::now($tz);
+        $now = Carbon::now($tz);
 
         $this->update([
             'last_check' => $now,
@@ -118,7 +121,7 @@ trait SupportsCronHealthCheck
         $isUp = $newStatus == CronMonitorStatus::UP;
         $isUnknown = $newStatus == CronMonitorStatus::UNKNOWN;
 
-        if (!$isDown && !$isUnknown) {
+        if (! $isDown && ! $isUnknown) {
             $nextDueDate = $this->calculateNextDueDateWithGracePeriod($now->toDateTime(), $tz);
             $this->next_due_date = $nextDueDate;
             $this->save();
@@ -129,11 +132,11 @@ trait SupportsCronHealthCheck
             $this->save();
         }
 
-        if ($statusChanged && !$startsGracePeriod) {
+        if ($statusChanged && ! $startsGracePeriod) {
             if ($isDown) {
                 $this->cronMonitorHasFailed($request);
             }
-            if ($isUp && !$isCurrentlyInGracePeriod) {
+            if ($isUp && ! $isCurrentlyInGracePeriod) {
                 $this->cronMonitorHasRecovered();
             }
         }
@@ -143,11 +146,11 @@ trait SupportsCronHealthCheck
         }
     }
 
-    public function checkHealthStatus(Carbon|null $now = null): string
+    public function checkHealthStatus(?Carbon $now = null): string
     {
         $now = $now ?? Carbon::now($this->timezone);
 
-        if (!$this->last_check) {
+        if (! $this->last_check) {
 
             if ($this->status != CronMonitorStatus::UNKNOWN) {
                 $this->cronMonitorStatusUnknown();
@@ -163,7 +166,7 @@ trait SupportsCronHealthCheck
         return $this->status;
     }
 
-    public function cronMonitorHasFailed(Request|null $request = null): void
+    public function cronMonitorHasFailed(?Request $request = null): void
     {
         $this->setFailureReason($request);
         $this->status = CronMonitorStatus::DOWN;
@@ -173,27 +176,30 @@ trait SupportsCronHealthCheck
         event(new CronCheckFailedEvent($this));
     }
 
-    public function setFailureReason(Request|null $request = null): void
+    public function setFailureReason(?Request $request = null): void
     {
         if ($request) {
-            if ($request->getContent() != "") {
+            if ($request->getContent() != '') {
                 $this->failure_reason = $request->getContent();
+
                 return;
             }
 
             if ($request->has('reason')) {
                 $this->failure_reason = $request->input('reason');
+
                 return;
             }
 
             if ($request->has('message')) {
                 $this->failure_reason = $request->input('message');
+
                 return;
             }
 
-            $this->failure_reason = "application sent error ping";
+            $this->failure_reason = 'application sent error ping';
         } else {
-            $this->failure_reason = "no ping received within required interval";
+            $this->failure_reason = 'no ping received within required interval';
         }
     }
 

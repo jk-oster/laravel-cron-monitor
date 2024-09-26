@@ -2,12 +2,11 @@
 
 namespace JkOster\CronMonitor;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Support\Facades\Route;
 use JkOster\CronMonitor\Commands\ProcessCronCheck;
 use JkOster\CronMonitor\Commands\SyncFile;
-use Illuminate\Support\Facades\Route;
-
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class CronMonitorServiceProvider extends PackageServiceProvider
 {
@@ -27,18 +26,18 @@ class CronMonitorServiceProvider extends PackageServiceProvider
             // ->hasCommand(CronMonitorCommand::class)
             ->hasCommands([
                 ProcessCronCheck::class,
-                SyncFile::class
+                SyncFile::class,
             ]);
     }
 
     protected function registerRoutes()
     {
-        if(!config('cron-monitor.api.enabled')) {
+        if (! config('cron-monitor.api.enabled')) {
             return;
         }
 
         Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         });
     }
 

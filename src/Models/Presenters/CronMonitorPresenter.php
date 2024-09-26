@@ -25,7 +25,7 @@ trait CronMonitorPresenter
 
     public function formattedReportTitle(): string
     {
-        return $this->getStatusAsEmojiAttribute() . $this->name . ' | Health Report';
+        return $this->getStatusAsEmojiAttribute().$this->name.' | Health Report';
     }
 
     public function formattedLastCheck(string $format = ''): string

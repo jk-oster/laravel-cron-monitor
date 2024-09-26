@@ -2,15 +2,13 @@
 
 namespace JkOster\CronMonitor\Notifications\Notifications;
 
-use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Models\Monitor;
 use Carbon\Carbon;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
+use JkOster\CronMonitor\Models\Monitor;
 use JkOster\CronMonitor\Notifications\BaseNotification;
 
 class CronCheckFailed extends BaseNotification
@@ -18,16 +16,14 @@ class CronCheckFailed extends BaseNotification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Monitor $monitor)
-    {
-    }
+    public function __construct(public Monitor $monitor) {}
 
     /**
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $mailMessage = (new MailMessage())
+        $mailMessage = (new MailMessage)
             ->error()
             ->subject($this->getMessageText())
             ->line($this->getMessageText());
@@ -41,13 +37,13 @@ class CronCheckFailed extends BaseNotification
 
     public function toSlack(object $notifiable): SlackMessage
     {
-        return (new SlackMessage())
+        return (new SlackMessage)
             ->error()
             ->attachment(function (SlackAttachment $attachment) {
                 $attachment
                     ->title($this->getMessageText())
-                    ->content($this->getMessageText(). "\n" . implode("\n", $this->getAddtionalLines()))
-                    ->fallback($this->getMessageText() . "\n" . implode("\n", $this->getAddtionalLines()))
+                    ->content($this->getMessageText()."\n".implode("\n", $this->getAddtionalLines()))
+                    ->fallback($this->getMessageText()."\n".implode("\n", $this->getAddtionalLines()))
                     ->timestamp(Carbon::now());
             });
     }
@@ -58,8 +54,8 @@ class CronCheckFailed extends BaseNotification
     public function toVonage(object $notifiable): VonageMessage
     {
         return (new VonageMessage)
-                    ->content($this->getMessageText() . "\n" . implode("\n", $this->getAddtionalLines()))
-                    ->unicode();
+            ->content($this->getMessageText()."\n".implode("\n", $this->getAddtionalLines()))
+            ->unicode();
     }
 
     public function toArray(object $notifiable): array
@@ -74,7 +70,7 @@ class CronCheckFailed extends BaseNotification
 
     protected function getMessageText(bool $withEmoji = true): string
     {
-        return ($withEmoji ? "{$this->monitor->status_as_emoji} " : '') . "{$this->monitor->name} seems down.";
+        return ($withEmoji ? "{$this->monitor->status_as_emoji} " : '')."{$this->monitor->name} seems down.";
     }
 
     protected function getAddtionalLines(): array

@@ -14,7 +14,7 @@ class Period
     public function __construct(CarbonInterface $startDateTime, CarbonInterface $endDateTime)
     {
         if ($startDateTime->gt($endDateTime)) {
-            throw  InvalidPeriod::startDateMustComeBeforeEndDate($startDateTime, $endDateTime);
+            throw InvalidPeriod::startDateMustComeBeforeEndDate($startDateTime, $endDateTime);
         }
 
         $this->startDateTime = $startDateTime;
@@ -42,10 +42,10 @@ class Period
         $configuredDateFormat = config('cron-monitor.notifications.date_format');
 
         return
-            $this->startDateTime->format('H:i') . ' '
-            . ($this->startDateTime->isToday() ? '' : "on {$this->startDateTime->format($configuredDateFormat)} ")
-            . '➡️ '
-            . $this->endDateTime->format('H:i')
-            . ($this->endDateTime->isToday() ? '' : " on {$this->endDateTime->format($configuredDateFormat)}");
+            $this->startDateTime->format('H:i').' '
+            .($this->startDateTime->isToday() ? '' : "on {$this->startDateTime->format($configuredDateFormat)} ")
+            .'➡️ '
+            .$this->endDateTime->format('H:i')
+            .($this->endDateTime->isToday() ? '' : " on {$this->endDateTime->format($configuredDateFormat)}");
     }
 }

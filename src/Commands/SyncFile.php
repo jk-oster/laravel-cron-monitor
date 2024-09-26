@@ -2,9 +2,9 @@
 
 namespace JkOster\CronMonitor\Commands;
 
+use Cron\CronExpression;
 use JkOster\CronMonitor\Exceptions\CannotSaveMonitor;
 use JkOster\CronMonitor\Models\Monitor;
-use Cron\CronExpression;
 
 class SyncFile extends BaseCommand
 {
@@ -30,7 +30,7 @@ class SyncFile extends BaseCommand
     protected function validateMonitors($monitorsInFile)
     {
         $monitorsInFile->each(function ($monitorAttributes) {
-            if (isset($monitorAttributes['cron_expression']) && !CronExpression::isValidExpression($monitorAttributes['cron_expression'])) {
+            if (isset($monitorAttributes['cron_expression']) && ! CronExpression::isValidExpression($monitorAttributes['cron_expression'])) {
                 throw new CannotSaveMonitor("Cron Expression `{$monitorAttributes['cron_expression']}` is invalid");
             }
         });

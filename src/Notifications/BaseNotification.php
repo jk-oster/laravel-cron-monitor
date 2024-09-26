@@ -3,23 +3,20 @@
 namespace JkOster\CronMonitor\Notifications;
 
 use Illuminate\Notifications\Notification;
-use JkOster\CronMonitor\Models\Monitor;
 
 abstract class BaseNotification extends Notification
 {
-    public function __construct(protected $event)
-    {
-    }
+    public function __construct(protected $event) {}
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via(object $notifiable)
     {
-        return config('cron-monitor.notifications.notifications.' . static::class);
+        return config('cron-monitor.notifications.notifications.'.static::class);
     }
 
     public function getLocationDescription(): string

@@ -3,9 +3,9 @@
 namespace JkOster\CronMonitor;
 
 use Illuminate\Support\Collection;
-use JkOster\CronMonitor\Models\Monitor;
 use JkOster\CronMonitor\Exceptions\InvalidConfiguration;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
+use JkOster\CronMonitor\Models\Monitor;
 
 class MonitorRepository
 {
@@ -15,7 +15,6 @@ class MonitorRepository
 
         return MonitorCollection::make($monitors)->sortByName();
     }
-
 
     public static function getEnabled(): Collection
     {

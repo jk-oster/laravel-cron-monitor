@@ -10,7 +10,7 @@ class InvalidPingStatusReceived extends Exception
 {
     public static function receivedPingStatusIsInvalid(string $status): self
     {
-        return new static('Invalid ping status received: ' . $status);
+        return new static('Invalid ping status received: '.$status);
     }
 
     /**

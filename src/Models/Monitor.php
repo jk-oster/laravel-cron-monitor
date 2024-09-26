@@ -2,20 +2,20 @@
 
 namespace JkOster\CronMonitor\Models;
 
-use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Models\Traits\SupportsCronHealthCheck;
-use JkOster\CronMonitor\Models\Presenters\CronMonitorPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
+use JkOster\CronMonitor\Models\Presenters\CronMonitorPresenter;
+use JkOster\CronMonitor\Models\Traits\SupportsCronHealthCheck;
 
 class Monitor extends Model
 {
-    use HasFactory;
-    use SupportsCronHealthCheck;
     use CronMonitorPresenter;
+    use HasFactory;
     use Notifiable;
+    use SupportsCronHealthCheck;
 
     protected $fillable = [
         'name',
@@ -54,7 +54,7 @@ class Monitor extends Model
 
     public function getPingUrlAttribute(): string
     {
-        return config('cron-monitor.base_url') . "/api/ping/" . $this->hash;
+        return config('cron-monitor.base_url').'/api/ping/'.$this->hash;
     }
 
     public function isHealthy(): bool
