@@ -28,9 +28,9 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
         config()->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
 
         $migration = include __DIR__.'/../database/migrations/create_cron_monitors_table.php.stub';

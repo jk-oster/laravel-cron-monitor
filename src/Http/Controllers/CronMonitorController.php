@@ -5,7 +5,6 @@ namespace JkOster\Http\Controllers;
 use Illuminate\Http\Request;
 use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
-use JkOster\CronMonitor\Models\Monitor;
 
 class CronMonitorController extends Controller
 {

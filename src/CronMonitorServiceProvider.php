@@ -69,7 +69,7 @@ class CronMonitorServiceProvider extends ServiceProvider
             'middleware' => config('cron-monitor.api.middleware'),
         ];
 
-        if(config('cron-monitor.api.prefix')) {
+        if (config('cron-monitor.api.prefix')) {
             $config['prefix'] = config('cron-monitor.api.prefix');
         }
 

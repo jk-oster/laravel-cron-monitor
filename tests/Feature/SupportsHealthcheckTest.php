@@ -2,19 +2,19 @@
 
 namespace JkOster\CronMonitor\Tests\Feature;
 
-use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
-use JkOster\CronMonitor\Models\CronMonitor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
+use JkOster\CronMonitor\Models\CronMonitor;
+use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
+use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
 use JkOster\CronMonitor\Tests\TestCase;
 
 class SupportsCronMonitorTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var CronMonitor $monitor */
+    /** @var CronMonitor */
     protected $monitor;
 
     protected $user;

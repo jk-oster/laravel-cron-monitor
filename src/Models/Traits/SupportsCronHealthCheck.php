@@ -8,12 +8,12 @@ use DateTime;
 use Illuminate\Http\Request;
 use JkOster\CronMonitor\Events\CronCheckFailedEvent;
 use JkOster\CronMonitor\Events\CronCheckRecoveredEvent;
+use JkOster\CronMonitor\Events\IncomingPingReceivedEvent;
 use JkOster\CronMonitor\Exceptions\InvalidPingStatus;
-use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Helpers\Period;
+use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
-use JkOster\CronMonitor\Events\IncomingPingReceivedEvent;
 
 trait SupportsCronHealthCheck
 {
@@ -69,7 +69,7 @@ trait SupportsCronHealthCheck
 
     public function calculateNextDueDate(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
-        $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) :Carbon::now($tz);
+        $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) : Carbon::now($tz);
         if ($this->cron_expression && $this->last_check && CronExpression::isValidExpression($this->cron_expression)) {
             $cron = new CronExpression($this->cron_expression);
 
@@ -82,10 +82,11 @@ trait SupportsCronHealthCheck
     public function calculateNextDueDateWithGracePeriod(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
         $nextDueDate = new Carbon($this->calculateNextDueDate($currentTime, $tz));
+
         return $nextDueDate->addMinutes($this->grace_period);
     }
 
-    public function cronMonitorStatusReceived(string $incomingPingStatus, Request $request = null): void
+    public function cronMonitorStatusReceived(string $incomingPingStatus, ?Request $request = null): void
     {
         $oldStatus = $this->status;
 
@@ -96,7 +97,7 @@ trait SupportsCronHealthCheck
             IncomingPingStatus::STARTED => CronMonitorStatus::STARTED,
         ];
 
-        if(!isset($statusMapping[$incomingPingStatus])) {
+        if (! isset($statusMapping[$incomingPingStatus])) {
             throw new InvalidPingStatus($incomingPingStatus);
         }
 
@@ -149,7 +150,7 @@ trait SupportsCronHealthCheck
     {
         $now = $now ?? Carbon::now($this->timezone);
 
-        if (!$this->last_check) {
+        if (! $this->last_check) {
 
             if ($this->status != CronMonitorStatus::UNKNOWN) {
                 $this->cronMonitorStatusUnknown();

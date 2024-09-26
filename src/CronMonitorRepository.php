@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use JkOster\CronMonitor\Exceptions\InvalidConfiguration;
 use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Models\Monitor;
 
 class CronMonitorRepository
 {
