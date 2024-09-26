@@ -1,0 +1,131 @@
+#ddev-generated
+# If you remove the ddev-generated line above you
+# are responsible for maintaining this file. DDEV will not then
+# update it, for example if you add `additional_hostnames`, etc.
+
+http:
+  routers:
+    are-you-ok-php-cypress-8080-http:
+      entrypoints:
+        - http-3000
+      rule: HostRegexp(`^are-you-ok-php\.cypress\.ddev\.site$`)
+      
+      service: "are-you-ok-php-cypress-8080"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "are-you-ok-php-redirectHttps"
+    are-you-ok-php-phpmyadmin-80-http:
+      entrypoints:
+        - http-8036
+      rule: HostRegexp(`^are-you-ok-php\.ddev\.site$`)
+      
+      service: "are-you-ok-php-phpmyadmin-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "are-you-ok-php-redirectHttps"
+    are-you-ok-php-web-80-http:
+      entrypoints:
+        - http-80
+      rule: HostRegexp(`^are-you-ok-php\.ddev\.site$`)
+      
+      service: "are-you-ok-php-web-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "are-you-ok-php-redirectHttps"
+    are-you-ok-php-web-8025-http:
+      entrypoints:
+        - http-8025
+      rule: HostRegexp(`^are-you-ok-php\.ddev\.site$`)
+      
+      service: "are-you-ok-php-web-8025"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "are-you-ok-php-redirectHttps"
+    
+    
+    are-you-ok-php-cypress-8080-https:
+      entrypoints:
+        - http-3000
+      rule: HostRegexp(`^are-you-ok-php\.cypress\.ddev\.site$`)
+      
+      service: "are-you-ok-php-cypress-8080"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    
+    are-you-ok-php-phpmyadmin-80-https:
+      entrypoints:
+        - http-8037
+      rule: HostRegexp(`^are-you-ok-php\.ddev\.site$`)
+      
+      service: "are-you-ok-php-phpmyadmin-80"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    
+    
+    are-you-ok-php-web-80-https:
+      entrypoints:
+        - http-443
+      rule: HostRegexp(`^are-you-ok-php\.ddev\.site$`)
+      
+      service: "are-you-ok-php-web-80"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    are-you-ok-php-web-8025-https:
+      entrypoints:
+        - http-8026
+      rule: HostRegexp(`^are-you-ok-php\.ddev\.site$`)
+      
+      service: "are-you-ok-php-web-8025"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    
+
+  middlewares:
+    are-you-ok-php-redirectHttps:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    are-you-ok-php-cypress-8080:
+      loadbalancer:
+        servers:
+          - url: http://ddev-are-you-ok-php-cypress:8080
+        
+    
+    are-you-ok-php-phpmyadmin-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-are-you-ok-php-phpmyadmin:80
+        
+    
+    are-you-ok-php-web-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-are-you-ok-php-web:80
+        
+    are-you-ok-php-web-8025:
+      loadbalancer:
+        servers:
+          - url: http://ddev-are-you-ok-php-web:8025
+        
+    
+    
+    
+
+tls:
+  certificates:
+    - certFile: /mnt/ddev-global-cache/traefik/certs/are-you-ok-php.crt
+      keyFile: /mnt/ddev-global-cache/traefik/certs/are-you-ok-php.key

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+mkdir -p node_modules
+npm install --unsafe-perm=true --allow-root
+exec bash
