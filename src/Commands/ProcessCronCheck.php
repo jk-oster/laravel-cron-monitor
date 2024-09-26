@@ -2,7 +2,7 @@
 
 namespace JkOster\CronMonitor\Commands;
 
-use JkOster\CronMonitor\MonitorRepository;
+use JkOster\CronMonitor\CronMonitorRepository;
 
 class ProcessCronCheck extends BaseCommand
 {
@@ -28,17 +28,17 @@ class ProcessCronCheck extends BaseCommand
     {
         $force = $this->option('force');
 
-        /** @var \JkOster\CronMonitor\MonitorCollection $cronMonitors */
-        $cronMonitors = MonitorRepository::getEnabled();
+        /** @var \JkOster\CronMonitor\CronMonitorCollection $cronMonitors */
+        $cronMonitors = CronMonitorRepository::getEnabled();
 
         $this->comment('Start checking health of '.count($cronMonitors).' cron monitors...');
 
         $cronMonitors->checkHealth($force);
 
-        $healthyMonitors = MonitorRepository::getHealthy();
+        $healthyMonitors = CronMonitorRepository::getHealthy();
         $this->info('Found '.count($healthyMonitors).' healthy cron monitors');
 
-        $unhealthyMonitors = MonitorRepository::getUnhealthy();
+        $unhealthyMonitors = CronMonitorRepository::getUnhealthy();
         $this->info('Found '.count($unhealthyMonitors).' unhealthy cron monitors');
 
         $this->info('All done!');

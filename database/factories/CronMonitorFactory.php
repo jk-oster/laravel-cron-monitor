@@ -3,12 +3,11 @@
 namespace JkOster\CronMonitor\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use JkOster\CronMonitor\Models\Monitor;
+use JkOster\CronMonitor\Models\CronMonitor;
 
-/*
-class MonitorFactory extends Factory
+class CronMonitorFactory extends Factory
 {
-    protected $model = Monitor::class;
+    protected $model = CronMonitor::class;
 
     public function definition()
     {
@@ -17,4 +16,3 @@ class MonitorFactory extends Factory
         ];
     }
 }
-*/

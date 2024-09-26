@@ -30,12 +30,12 @@ trait CronMonitorPresenter
 
     public function formattedLastCheck(string $format = ''): string
     {
-        return $this->formatDate('last_check', $format);
+        return $this->formatDate('last_check_date', $format);
     }
 
     public function formattedLastCheckFailed(string $format = ''): string
     {
-        return $this->formatDate('last_check_failed', $format);
+        return $this->formatDate('last_check_failed_date', $format);
     }
 
     protected function formatDate(string $attributeName, string $format = ''): string

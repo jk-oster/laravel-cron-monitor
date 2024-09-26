@@ -8,18 +8,18 @@ use DateTime;
 use Illuminate\Http\Request;
 use JkOster\CronMonitor\Events\CronCheckFailedEvent;
 use JkOster\CronMonitor\Events\CronCheckRecoveredEvent;
-use JkOster\CronMonitor\Events\IncomingPingReceived;
-use JkOster\CronMonitor\Exceptions\InvalidPingStatusReceived;
+use JkOster\CronMonitor\Exceptions\InvalidPingStatus;
+use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Helpers\Period;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
-use JkOster\CronMonitor\Models\Monitor;
+use JkOster\CronMonitor\Events\IncomingPingReceivedEvent;
 
 trait SupportsCronHealthCheck
 {
     public static function bootSupportsMonitor(): void
     {
-        static::saving(function (Monitor $monitor) {
+        static::saving(function (CronMonitor $monitor) {
             $tz = $monitor->timezone;
             $currentDateTime = new DateTime('now', $tz);
 
@@ -40,8 +40,8 @@ trait SupportsCronHealthCheck
             }
 
             $cronExpressionChanged = $monitor->getOriginal('cron_expression') != $monitor->cron_expression;
-            $frequencyChanged = $monitor->getOriginal('frequency') != $monitor->frequency;
-            $gracePeriodChanged = $monitor->getOriginal('grace_period') != $monitor->grace_period;
+            $frequencyChanged = $monitor->getOriginal('frequency_in_minutes') != $monitor->frequency_in_minutes;
+            $gracePeriodChanged = $monitor->getOriginal('grace_period_in_minutes') != $monitor->grace_period_in_minutes;
 
             if ($cronExpressionChanged || $frequencyChanged || $gracePeriodChanged) {
                 $monitor->next_due_date = $monitor->calculateNextDueDateWithGracePeriod($currentDateTime, $tz);
@@ -69,24 +69,23 @@ trait SupportsCronHealthCheck
 
     public function calculateNextDueDate(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
-        $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) : Carbon::now($tz);
+        $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) :Carbon::now($tz);
         if ($this->cron_expression && $this->last_check && CronExpression::isValidExpression($this->cron_expression)) {
             $cron = new CronExpression($this->cron_expression);
 
             return $cron->getNextRunDate($currentTime, $tz);
         } else {
-            return $currentTime->addMinutes($this->frequency)->toDateTime();
+            return $currentTime->addMinutes($this->frequency_in_minutes)->toDateTime();
         }
     }
 
     public function calculateNextDueDateWithGracePeriod(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
         $nextDueDate = new Carbon($this->calculateNextDueDate($currentTime, $tz));
-
         return $nextDueDate->addMinutes($this->grace_period);
     }
 
-    public function cronMonitorStatusReceived(string $incomingPingStatus, ?Request $request = null): void
+    public function cronMonitorStatusReceived(string $incomingPingStatus, Request $request = null): void
     {
         $oldStatus = $this->status;
 
@@ -97,18 +96,18 @@ trait SupportsCronHealthCheck
             IncomingPingStatus::STARTED => CronMonitorStatus::STARTED,
         ];
 
-        if (! isset($statusMapping[$incomingPingStatus])) {
-            throw new InvalidPingStatusReceived($incomingPingStatus);
+        if(!isset($statusMapping[$incomingPingStatus])) {
+            throw new InvalidPingStatus($incomingPingStatus);
         }
 
-        event(new IncomingPingReceived($this, $request));
+        event(new IncomingPingReceivedEvent($this, $request));
 
         $newStatus = $statusMapping[$incomingPingStatus];
         $tz = $this->timezone;
         $now = Carbon::now($tz);
 
         $this->update([
-            'last_check' => $now,
+            'last_check_date' => $now,
             'status' => $newStatus,
             'last_ping_status' => $incomingPingStatus,
         ]);
@@ -150,7 +149,7 @@ trait SupportsCronHealthCheck
     {
         $now = $now ?? Carbon::now($this->timezone);
 
-        if (! $this->last_check) {
+        if (!$this->last_check) {
 
             if ($this->status != CronMonitorStatus::UNKNOWN) {
                 $this->cronMonitorStatusUnknown();
@@ -170,7 +169,7 @@ trait SupportsCronHealthCheck
     {
         $this->setFailureReason($request);
         $this->status = CronMonitorStatus::DOWN;
-        $this->last_check_failed = Carbon::now($this->timezone);
+        $this->last_check_failed_date = Carbon::now($this->timezone);
         $this->save();
 
         event(new CronCheckFailedEvent($this));
@@ -209,9 +208,9 @@ trait SupportsCronHealthCheck
         $this->status = CronMonitorStatus::UP;
         $this->save();
 
-        if ($this->last_check_failed) {
-            $lastStatusChangeDate = $this->last_check_failed;
-            $downtimePeriod = new Period($lastStatusChangeDate, $this->last_check ?? Carbon::now($tz));
+        if ($this->last_check_failed_date) {
+            $lastStatusChangeDate = $this->last_check_failed_date;
+            $downtimePeriod = new Period($lastStatusChangeDate, $this->last_check_date ?? Carbon::now($tz));
 
             event(new CronCheckRecoveredEvent($this, $downtimePeriod));
         }
@@ -221,7 +220,7 @@ trait SupportsCronHealthCheck
     {
         $tz = $this->timezone;
         $this->status = CronMonitorStatus::STARTED;
-        $this->next_due_date = Carbon::now(config('app.timezone', 'UTC'))->addMinutes($this->grace_period);
+        $this->next_due_date = Carbon::now(config('app.timezone', 'UTC'))->addMinutes($this->grace_period_in_minutes);
         $this->save();
     }
 

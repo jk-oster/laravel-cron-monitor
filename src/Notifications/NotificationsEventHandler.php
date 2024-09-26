@@ -7,7 +7,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use JkOster\CronMonitor\Events\CronCheckFailedEvent;
 use JkOster\CronMonitor\Events\CronCheckRecoveredEvent;
 
-class EventHandler
+class NotificationsEventHandler
 {
     /** @var \Illuminate\Config\Repository */
     protected $config;

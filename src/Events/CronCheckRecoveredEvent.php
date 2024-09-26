@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use JkOster\CronMonitor\Helpers\Period;
-use JkOster\CronMonitor\Models\Monitor;
+use JkOster\CronMonitor\Models\CronMonitor;
 
 class CronCheckRecoveredEvent implements ShouldBroadcast, ShouldQueue
 {
@@ -18,7 +18,7 @@ class CronCheckRecoveredEvent implements ShouldBroadcast, ShouldQueue
     /**
      * Create a new event instance.
      */
-    public function __construct(public Monitor $monitor, public Period $downtimePeriod) {}
+    public function __construct(public CronMonitor $monitor, public Period $downtimePeriod) {}
 
     /**
      * Get the channels the event should broadcast on.

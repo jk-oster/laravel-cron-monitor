@@ -8,7 +8,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use JkOster\CronMonitor\Models\Monitor;
+use JkOster\CronMonitor\Models\CronMonitor;
 
 class CronCheckFailedEvent implements ShouldBroadcast, ShouldQueue
 {
@@ -17,7 +17,7 @@ class CronCheckFailedEvent implements ShouldBroadcast, ShouldQueue
     /**
      * Create a new event instance.
      */
-    public function __construct(public Monitor $monitor) {}
+    public function __construct(public CronMonitor $monitor) {}
 
     /**
      * Get the channels the event should broadcast on.

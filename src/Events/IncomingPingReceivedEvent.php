@@ -9,16 +9,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
-use JkOster\CronMonitor\Models\Monitor;
+use JkOster\CronMonitor\Models\CronMonitor;
 
-class IncomingPingReceived implements ShouldBroadcast, ShouldQueue
+class IncomingPingReceivedEvent implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Monitor $monitor, public Request $request) {}
+    public function __construct(public CronMonitor $monitor, public Request $request) {}
 
     /**
      * Get the channels the event should broadcast on.

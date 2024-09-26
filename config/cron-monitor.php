@@ -17,16 +17,12 @@ return [
      */
     'notifications' => [
 
+        'enabled' => true,
+
         'notifications' => [
             \JkOster\CronMonitor\Notifications\Notifications\CronCheckFailed::class => ['slack', 'mail'],
             \JkOster\CronMonitor\Notifications\Notifications\CronCheckRecovered::class => ['slack', 'mail'],
         ],
-
-        /*
-         * To keep reminding you that a site is down, notifications
-         * will be resent every given number of minutes.
-         */
-        'resend_cron_check_failed_notification_every_minutes' => 60,
 
         'mail' => [
             'to' => ['your@email.com'],
@@ -53,5 +49,5 @@ return [
      * own model here. The only requirement is that it should extend
      * `Spatie\UptimeMonitor\Models\Monitor`.
      */
-    'monitor_model' => \JkOster\CronMonitor\Models\Monitor::class,
+    'monitor_model' => \JkOster\CronMonitor\Models\CronMonitor::class,
 ];

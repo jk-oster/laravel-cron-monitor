@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('cron_monitor_table', function (Blueprint $table) {
+        Schema::create('cron_monitors', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('New CronMonitor');
             $table->string('description')->nullable();

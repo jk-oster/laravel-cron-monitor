@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class InvalidPingStatusReceived extends Exception
+class InvalidPingStatus extends Exception
 {
     public static function receivedPingStatusIsInvalid(string $status): self
     {

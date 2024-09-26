@@ -5,7 +5,7 @@ namespace JkOster\CronMonitor;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
-class MonitorCollection extends Collection
+class CronMonitorCollection extends Collection
 {
     public function checkHealth($force = false): void
     {

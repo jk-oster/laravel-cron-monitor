@@ -4,23 +4,24 @@ namespace JkOster\CronMonitor;
 
 use Illuminate\Support\Collection;
 use JkOster\CronMonitor\Exceptions\InvalidConfiguration;
+use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Models\Monitor;
 
-class MonitorRepository
+class CronMonitorRepository
 {
     public static function getUnchecked(): Collection
     {
         $monitors = self::query()->where('status', CronMonitorStatus::UNKNOWN)->get();
 
-        return MonitorCollection::make($monitors)->sortByName();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     public static function getEnabled(): Collection
     {
         $monitors = self::query()->get();
 
-        return MonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByHost();
     }
 
     public static function getDisabled(): Collection
@@ -29,21 +30,21 @@ class MonitorRepository
 
         $monitors = $modelClass::where('enabled', false)->get();
 
-        return MonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByHost();
     }
 
-    public static function getForUptimeCheck(): MonitorCollection
+    public static function getForUptimeCheck(): CronMonitorCollection
     {
         $monitors = self::query()->get()->filter->shouldCheckUptime();
 
-        return MonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByHost();
     }
 
     public static function getHealthy(): Collection
     {
         $monitors = self::query()->get()->filter->isHealthy();
 
-        return MonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByHost();
     }
 
     public static function getWithFailingUptimeCheck(): Collection
@@ -52,14 +53,14 @@ class MonitorRepository
             ->where('status', CronMonitorStatus::DOWN)
             ->get();
 
-        return MonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByHost();
     }
 
     public static function getUnhealthy(): Collection
     {
         $monitors = self::query()->get()->reject->isHealthy();
 
-        return MonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByHost();
     }
 
     protected static function query()
@@ -71,9 +72,9 @@ class MonitorRepository
 
     protected static function determineMonitorModel(): string
     {
-        $monitorModel = config('cron-monitor.monitor_model') ?? Monitor::class;
+        $monitorModel = config('cron-monitor.monitor_model') ?? CronMonitor::class;
 
-        if (! is_a($monitorModel, Monitor::class, true)) {
+        if (! is_a($monitorModel, CronMonitor::class, true)) {
             throw InvalidConfiguration::modelIsNotValid($monitorModel);
         }
 

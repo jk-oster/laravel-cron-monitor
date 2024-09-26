@@ -8,8 +8,8 @@ use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
+use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
-use JkOster\CronMonitor\Models\Monitor;
 use JkOster\CronMonitor\Notifications\BaseNotification;
 use Spatie\UptimeMonitor\Helpers\Period;
 
@@ -18,7 +18,7 @@ class CronCheckRecovered extends BaseNotification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Monitor $monitor, public Period $downtimePeriod) {}
+    public function __construct(public CronMonitor $monitor, public Period $downtimePeriod) {}
 
     /**
      * Get the mail representation of the notification.

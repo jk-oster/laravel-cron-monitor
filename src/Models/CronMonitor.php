@@ -10,7 +10,7 @@ use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Models\Presenters\CronMonitorPresenter;
 use JkOster\CronMonitor\Models\Traits\SupportsCronHealthCheck;
 
-class Monitor extends Model
+class CronMonitor extends Model
 {
     use CronMonitorPresenter;
     use HasFactory;

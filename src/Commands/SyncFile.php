@@ -4,7 +4,7 @@ namespace JkOster\CronMonitor\Commands;
 
 use Cron\CronExpression;
 use JkOster\CronMonitor\Exceptions\CannotSaveMonitor;
-use JkOster\CronMonitor\Models\Monitor;
+use JkOster\CronMonitor\Models\CronMonitor;
 
 class SyncFile extends BaseCommand
 {
@@ -48,7 +48,7 @@ class SyncFile extends BaseCommand
 
     protected function createOrUpdateMonitor(array $monitorAttributes)
     {
-        Monitor::firstOrNew([
+        CronMonitor::firstOrNew([
             'hash' => $monitorAttributes['hash'],
         ])
             ->fill($monitorAttributes)
@@ -61,11 +61,11 @@ class SyncFile extends BaseCommand
             return;
         }
 
-        Monitor::all()
-            ->reject(function (Monitor $monitor) use ($monitorsInFile) {
+        CronMonitor::all()
+            ->reject(function (CronMonitor $monitor) use ($monitorsInFile) {
                 return $monitorsInFile->contains('hash', $monitor->hash);
             })
-            ->each(function (Monitor $monitor) {
+            ->each(function (CronMonitor $monitor) {
                 $path = $this->argument('path');
                 $this->comment("Deleted monitor for `{$monitor->name}` from database because no monitor with a matching hash was not found in `{$path}`");
                 $monitor->delete();
