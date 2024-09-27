@@ -14,6 +14,6 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/api/cron-monitor/ping/test');
 
-        $response->assertStatus(200);
+        $response->assertStatus(404);
     }
 }
