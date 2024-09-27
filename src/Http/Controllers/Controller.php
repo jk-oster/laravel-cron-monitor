@@ -1,6 +1,6 @@
 <?php
 
-namespace JkOster\Http\Controllers;
+namespace JkOster\CronMonitor\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;

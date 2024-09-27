@@ -1,6 +1,6 @@
 <?php
 
-namespace JkOster\Http\Controllers;
+namespace JkOster\CronMonitor\Http\Controllers;
 
 use Illuminate\Http\Request;
 use JkOster\CronMonitor\Models\CronMonitor;
