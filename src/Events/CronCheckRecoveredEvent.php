@@ -18,7 +18,7 @@ class CronCheckRecoveredEvent implements ShouldBroadcast, ShouldQueue
     /**
      * Create a new event instance.
      */
-    public function __construct(public CronMonitor $monitor, public Period $downtimePeriod) {}
+    public function __construct(public CronMonitor $monitor, public Period $downtimePeriod, public ?array $requestData) {}
 
     /**
      * Get the channels the event should broadcast on.

@@ -90,6 +90,8 @@ trait SupportsCronHealthCheck
     {
         $oldStatus = $this->status;
 
+        $incomingPingStatus = strtolower($incomingPingStatus);
+
         $statusMapping = [
             IncomingPingStatus::SUCCESS => CronMonitorStatus::UP,
             IncomingPingStatus::ERROR => CronMonitorStatus::DOWN,
@@ -113,15 +115,13 @@ trait SupportsCronHealthCheck
             'last_ping_status' => $incomingPingStatus,
         ]);
 
-        dd($oldStatus, $newStatus);
+        $statusChanged = $oldStatus !== $newStatus;
+        $isCurrentlyInGracePeriod = $oldStatus === CronMonitorStatus::STARTED;
+        $startsGracePeriod = $newStatus === CronMonitorStatus::STARTED;
 
-        $statusChanged = $oldStatus != $newStatus;
-        $isCurrentlyInGracePeriod = $oldStatus == CronMonitorStatus::STARTED;
-        $startsGracePeriod = $newStatus == CronMonitorStatus::STARTED;
-
-        $isDown = $newStatus == CronMonitorStatus::DOWN;
-        $isUp = $newStatus == CronMonitorStatus::UP;
-        $isUnknown = $newStatus == CronMonitorStatus::UNKNOWN;
+        $isDown = $newStatus === CronMonitorStatus::DOWN;
+        $isUp = $newStatus === CronMonitorStatus::UP;
+        $isUnknown = $newStatus === CronMonitorStatus::UNKNOWN;
 
         if (! $isDown && ! $isUnknown) {
             $nextDueDate = $this->calculateNextDueDateWithGracePeriod($now->toDateTime(), $tz);
@@ -137,7 +137,7 @@ trait SupportsCronHealthCheck
                 $this->cronMonitorHasFailed($request);
             }
             if ($isUp && ! $isCurrentlyInGracePeriod) {
-                $this->cronMonitorHasRecovered();
+                $this->cronMonitorHasRecovered($request);
             }
         }
 
@@ -175,7 +175,7 @@ trait SupportsCronHealthCheck
         $this->last_check_failed_date = Carbon::now($this->timezone);
         $this->save();
 
-        event(new CronCheckFailedEvent($this));
+        event(new CronCheckFailedEvent($this, $request->all() ?? []));
     }
 
     public function setFailureReason(?Request $request = null): void
@@ -205,7 +205,7 @@ trait SupportsCronHealthCheck
         }
     }
 
-    public function cronMonitorHasRecovered(): void
+    public function cronMonitorHasRecovered(?Request $request = null): void
     {
         $tz = $this->timezone;
         $this->status = CronMonitorStatus::UP;
@@ -215,7 +215,7 @@ trait SupportsCronHealthCheck
             $lastStatusChangeDate = $this->last_check_failed_date;
             $downtimePeriod = new Period($lastStatusChangeDate, $this->last_check_date ?? Carbon::now($tz));
 
-            event(new CronCheckRecoveredEvent($this, $downtimePeriod));
+            event(new CronCheckRecoveredEvent($this, $downtimePeriod, $request ? $request->all() : []));
         }
     }
 
