@@ -25,14 +25,10 @@ trait SupportsCronHealthCheck
 
             if (is_null($monitor->status_last_change_date)) {
                 $monitor->status_last_change_date = Carbon::now($tz);
-
-                return;
             }
 
             if (is_null($monitor->next_due_date)) {
                 $monitor->next_due_date = $monitor->calculateNextDueDateWithGracePeriod($currentDateTime, $tz);
-
-                return;
             }
 
             if ($monitor->getOriginal('status') != $monitor->status) {
@@ -70,7 +66,8 @@ trait SupportsCronHealthCheck
     public function calculateNextDueDate(?\DateTime $currentTime = null, \DateTimeZone|string|null $tz = null): \DateTime
     {
         $currentTime = $currentTime ? (new Carbon($currentTime))->setTimezone($tz) : Carbon::now($tz);
-        if ($this->cron_expression && $this->last_check && CronExpression::isValidExpression($this->cron_expression)) {
+
+        if ($this->cron_expression && $this->last_check_date && CronExpression::isValidExpression($this->cron_expression)) {
             $cron = new CronExpression($this->cron_expression);
 
             return $cron->getNextRunDate($currentTime, $tz);
@@ -86,7 +83,7 @@ trait SupportsCronHealthCheck
         return $nextDueDate->addMinutes($this->grace_period);
     }
 
-    public function cronMonitorStatusReceived(string $incomingPingStatus, ?Request $request = null): void
+    public function cronMonitorStatusReceived(string $incomingPingStatus, ?Request $request = null): string
     {
         $oldStatus = $this->status;
 
@@ -146,13 +143,15 @@ trait SupportsCronHealthCheck
         }
 
         $this->save();
+
+        return $newStatus;
     }
 
     public function checkHealthStatus(?Carbon $now = null): string
     {
         $now = $now ?? Carbon::now($this->timezone);
 
-        if (! $this->last_check) {
+        if (! $this->last_check_date) {
 
             if ($this->status != CronMonitorStatus::UNKNOWN) {
                 $this->cronMonitorStatusUnknown();
