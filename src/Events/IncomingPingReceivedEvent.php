@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use JkOster\CronMonitor\Models\CronMonitor;
+use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
 
 class IncomingPingReceivedEvent implements ShouldBroadcast, ShouldQueue
 {
@@ -17,7 +18,7 @@ class IncomingPingReceivedEvent implements ShouldBroadcast, ShouldQueue
     /**
      * Create a new event instance.
      */
-    public function __construct(public CronMonitor $monitor, public array $requestData) {}
+    public function __construct(public CronMonitor $monitor, public string $status, public array $requestData) {}
 
     /**
      * Get the channels the event should broadcast on.
