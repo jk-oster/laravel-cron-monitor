@@ -101,7 +101,7 @@ trait SupportsCronHealthCheck
             throw new InvalidPingStatus($incomingPingStatus);
         }
 
-        event(new IncomingPingReceivedEvent($this, $request));
+        event(new IncomingPingReceivedEvent($this, $request->all() ?? []));
 
         $newStatus = $statusMapping[$incomingPingStatus];
         $tz = $this->timezone;

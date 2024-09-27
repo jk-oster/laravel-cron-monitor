@@ -18,7 +18,7 @@ class IncomingPingReceivedEvent implements ShouldBroadcast, ShouldQueue
     /**
      * Create a new event instance.
      */
-    public function __construct(public CronMonitor $monitor, public Request $request) {}
+    public function __construct(public CronMonitor $monitor, public array $requestData) {}
 
     /**
      * Get the channels the event should broadcast on.
