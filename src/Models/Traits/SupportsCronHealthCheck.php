@@ -98,7 +98,7 @@ trait SupportsCronHealthCheck
         ];
 
         if (! isset($statusMapping[$incomingPingStatus])) {
-            throw new InvalidPingStatus($incomingPingStatus);
+            throw InvalidPingStatus::receivedPingStatusIsInvalid($incomingPingStatus);
         }
 
         event(new IncomingPingReceivedEvent($this, $request->all() ?? []));
@@ -113,6 +113,8 @@ trait SupportsCronHealthCheck
             'last_ping_status' => $incomingPingStatus,
         ]);
 
+        dd($oldStatus, $newStatus);
+
         $statusChanged = $oldStatus != $newStatus;
         $isCurrentlyInGracePeriod = $oldStatus == CronMonitorStatus::STARTED;
         $startsGracePeriod = $newStatus == CronMonitorStatus::STARTED;
@@ -124,12 +126,10 @@ trait SupportsCronHealthCheck
         if (! $isDown && ! $isUnknown) {
             $nextDueDate = $this->calculateNextDueDateWithGracePeriod($now->toDateTime(), $tz);
             $this->next_due_date = $nextDueDate;
-            $this->save();
         }
 
         if ($isDown || $isUnknown) {
             $this->setFailureReason($request);
-            $this->save();
         }
 
         if ($statusChanged && ! $startsGracePeriod) {
@@ -144,6 +144,8 @@ trait SupportsCronHealthCheck
         if ($startsGracePeriod) {
             $this->cronMonitorGracePeriodStarted();
         }
+
+        $this->save();
     }
 
     public function checkHealthStatus(?Carbon $now = null): string
