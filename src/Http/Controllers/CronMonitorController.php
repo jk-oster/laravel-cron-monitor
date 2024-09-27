@@ -12,7 +12,7 @@ class CronMonitorController extends Controller
     {
         $monitor = CronMonitorRepository::getByHash($hash);
 
-        $status = $status ?? $request->input('status') ?? IncomingPingStatus::SUCCESS;
+        $status = $status !== '' ? $status : $request->input('status', IncomingPingStatus::SUCCESS);
 
         // if (!in_array($status, [
         //     IncomingPingStatus::SUCCESS,
