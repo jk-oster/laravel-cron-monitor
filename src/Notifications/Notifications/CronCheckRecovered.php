@@ -6,12 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Messages\VonageMessage;
-use Illuminate\Notifications\Notification;
 use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Notifications\BaseNotification;
-use Spatie\UptimeMonitor\Helpers\Period;
+use JkOster\CronMonitor\Helpers\Period;
 
 class CronCheckRecovered extends BaseNotification
 {
@@ -50,16 +48,6 @@ class CronCheckRecovered extends BaseNotification
             });
     }
 
-    /**
-     * Get the Vonage / SMS representation of the notification.
-     */
-    public function toVonage(object $notifiable): VonageMessage
-    {
-        return (new VonageMessage)
-            ->content($this->getMessageText()."\n".implode("\n", $this->getAddtionalLines()))
-            ->unicode();
-    }
-
     public function toArray(object $notifiable): array
     {
         return $this->monitor->toArray();
@@ -75,11 +63,15 @@ class CronCheckRecovered extends BaseNotification
         return ($withEmoji ? "{$this->monitor->status_as_emoji} " : '')."{$this->monitor->name} has recovered after {$this->downtimePeriod->duration()}";
     }
 
+    protected function getDownTimeText(): string
+    {
+        return "Downtime: {$this->downtimePeriod->duration()}: {$this->downtimePeriod->toText()}";
+    }
+
     protected function getAddtionalLines(): array
     {
         return [
-            "Downtime: {$this->downtimePeriod->duration()}: {$this->downtimePeriod->toText()}",
-            "See the [report page]({$this->monitor->report_url}) or edit this check [here]({$this->monitor->editurl}).",
+            $this->getDownTimeText(),
         ];
     }
 }

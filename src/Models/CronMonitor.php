@@ -4,7 +4,6 @@ namespace JkOster\CronMonitor\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Models\Presenters\CronMonitorPresenter;
@@ -14,7 +13,6 @@ class CronMonitor extends Model
 {
     use CronMonitorPresenter;
     use HasFactory;
-    use Notifiable;
     use SupportsCronHealthCheck;
 
     protected $fillable = [
@@ -50,12 +48,6 @@ class CronMonitor extends Model
         return $query->where('enabled', true);
     }
 
-    protected $appends = ['ping_url'];
-
-    public function getPingUrlAttribute(): string
-    {
-        return config('cron-monitor.base_url').'/api/ping/'.$this->hash;
-    }
 
     public function isHealthy(): bool
     {
@@ -75,7 +67,6 @@ class CronMonitor extends Model
 
         self::creating(function ($model) {
             $model->hash = (string) Str::uuid();
-            $model->timezone = $model->timezone ?? config('cron-monitor.timezone', config('app.timezone', 'UTC'));
         });
     }
 }

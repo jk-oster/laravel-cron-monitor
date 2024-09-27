@@ -1,9 +1,9 @@
 # Laravel package to monitor external cron jobs similat to spatie uptime monitor
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/98315600-jk-oster/laravel-cron-monitor.svg?style=flat-square)](https://packagist.org/packages/98315600-jk-oster/laravel-cron-monitor)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/98315600-jk-oster/laravel-cron-monitor/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/98315600-jk-oster/laravel-cron-monitor/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/98315600-jk-oster/laravel-cron-monitor/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/98315600-jk-oster/laravel-cron-monitor/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/98315600-jk-oster/laravel-cron-monitor.svg?style=flat-square)](https://packagist.org/packages/98315600-jk-oster/laravel-cron-monitor)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jk-oster/laravel-cron-monitor.svg?style=flat-square)](https://packagist.org/packages/jk-oster/laravel-cron-monitor)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jk-oster/laravel-cron-monitor/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/jk-oster/laravel-cron-monitor/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jk-oster/laravel-cron-monitor/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/jk-oster/laravel-cron-monitor/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/jk-oster/laravel-cron-monitor.svg?style=flat-square)](https://packagist.org/packages/jk-oster/laravel-cron-monitor)
 
 This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
@@ -20,7 +20,7 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 You can install the package via composer:
 
 ```bash
-composer require 98315600-jk-oster/laravel-cron-monitor
+composer require jk-oster/laravel-cron-monitor
 ```
 
 You can publish and run the migrations with:

@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Messages\VonageMessage;
 use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Notifications\BaseNotification;
@@ -48,16 +47,6 @@ class CronCheckFailed extends BaseNotification
             });
     }
 
-    /**
-     * Get the Vonage / SMS representation of the notification.
-     */
-    public function toVonage(object $notifiable): VonageMessage
-    {
-        return (new VonageMessage)
-            ->content($this->getMessageText()."\n".implode("\n", $this->getAddtionalLines()))
-            ->unicode();
-    }
-
     public function toArray(object $notifiable): array
     {
         return $this->monitor->toArray();
@@ -73,12 +62,21 @@ class CronCheckFailed extends BaseNotification
         return ($withEmoji ? "{$this->monitor->status_as_emoji} " : '')."{$this->monitor->name} seems down.";
     }
 
+    protected function getDownTimeText(): string
+    {
+        return "Since: {$this->monitor->formattedLastCheckFailed('H:i d/m/Y')}";
+    }
+
+    protected function getFailureReasonText(): string
+    {
+        return "Failure reason: *{$this->monitor->failure_reason}*";
+    }
+
     protected function getAddtionalLines(): array
     {
         return [
-            "Since: {$this->monitor->formattedLastCheckFailed('H:i d/m/Y')}",
-            "Failure reason: *{$this->monitor->failure_reason}*",
-            "See the [report page]({$this->monitor->report_url}) or edit this check [here]({$this->monitor->editurl}).",
+            $this->getDownTimeText(),
+            $this->getFailureReasonText(),
         ];
     }
 }

@@ -1,12 +1,14 @@
 {
-    "name": "98315600-jk-oster/laravel-cron-monitor",
-    "description": "Laravel package to monitor external cron jobs similat to spatie uptime monitor",
+    "name": "jk-oster/laravel-cron-monitor",
+    "description": "Laravel package to monitor external cron jobs. Inspired by spatie uptime monitor",
     "keywords": [
         "Jakob Osterberger",
         "laravel",
-        "laravel-cron-monitor"
+        "laravel-cron-monitor",
+        "laravel-cron",
+        "laravel-uptime-monitor"
     ],
-    "homepage": "https://github.com/98315600-jk-oster/laravel-cron-monitor",
+    "homepage": "https://github.com/jk-oster/laravel-cron-monitor",
     "license": "MIT",
     "authors": [
         {
