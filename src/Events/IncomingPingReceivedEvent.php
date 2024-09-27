@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use JkOster\CronMonitor\Models\CronMonitor;
-use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
 
 class IncomingPingReceivedEvent implements ShouldBroadcast, ShouldQueue
 {
