@@ -3,14 +3,14 @@
 namespace JkOster\CronMonitor\Http\Controllers;
 
 use Illuminate\Http\Request;
-use JkOster\CronMonitor\Models\CronMonitor;
+use JkOster\CronMonitor\CronMonitorRepository;
 use JkOster\CronMonitor\Models\Enums\IncomingPingStatus;
 
 class CronMonitorController extends Controller
 {
     public function ping(Request $request, string $hash, string $status = '')
     {
-        $monitor = CronMonitor::where('hash', '=', $hash)->first();
+        $monitor = CronMonitorRepository::getByHash($hash);
 
         $status = $status ?? $request->input('status') ?? IncomingPingStatus::SUCCESS;
 
@@ -37,7 +37,7 @@ class CronMonitorController extends Controller
 
     public function status(string $hash)
     {
-        $monitor = CronMonitor::where('hash', '=', $hash)->first();
+        $monitor = CronMonitorRepository::getByHash($hash);
         if ($monitor) {
             return response()->json(['message' => $monitor->status]);
         }

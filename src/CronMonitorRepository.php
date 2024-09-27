@@ -9,6 +9,11 @@ use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 
 class CronMonitorRepository
 {
+    public static function getByHash(string $hash): ?CronMonitor
+    {
+        return self::query()->where('hash', '=', $hash)->first();
+    }
+
     public static function getUnchecked(): Collection
     {
         $monitors = self::query()->where('status', CronMonitorStatus::UNKNOWN)->get();
