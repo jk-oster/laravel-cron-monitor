@@ -48,7 +48,6 @@ class CronMonitor extends Model
         return $query->where('enabled', true);
     }
 
-
     public function isHealthy(): bool
     {
         if ($this->enabled && in_array($this->status, [CronMonitorStatus::DOWN, CronMonitorStatus::UNKNOWN])) {

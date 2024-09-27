@@ -6,10 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
+use JkOster\CronMonitor\Helpers\Period;
 use JkOster\CronMonitor\Models\CronMonitor;
 use JkOster\CronMonitor\Models\Enums\CronMonitorStatus;
 use JkOster\CronMonitor\Notifications\BaseNotification;
-use JkOster\CronMonitor\Helpers\Period;
 
 class CronCheckRecovered extends BaseNotification
 {
