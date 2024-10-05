@@ -25,7 +25,7 @@ class CronMonitorRepository
     {
         $monitors = self::query()->get();
 
-        return CronMonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     public static function getDisabled(): Collection
@@ -34,21 +34,21 @@ class CronMonitorRepository
 
         $monitors = $modelClass::where('enabled', false)->get();
 
-        return CronMonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     public static function getForUptimeCheck(): CronMonitorCollection
     {
         $monitors = self::query()->get()->filter->shouldCheckUptime();
 
-        return CronMonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     public static function getHealthy(): Collection
     {
         $monitors = self::query()->get()->filter->isHealthy();
 
-        return CronMonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     public static function getWithFailingUptimeCheck(): Collection
@@ -57,14 +57,14 @@ class CronMonitorRepository
             ->where('status', CronMonitorStatus::DOWN)
             ->get();
 
-        return CronMonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     public static function getUnhealthy(): Collection
     {
         $monitors = self::query()->get()->reject->isHealthy();
 
-        return CronMonitorCollection::make($monitors)->sortByHost();
+        return CronMonitorCollection::make($monitors)->sortByName();
     }
 
     protected static function query()
