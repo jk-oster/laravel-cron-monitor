@@ -47,7 +47,7 @@ return [
     /*
      * To add or modify behaviour to the Monitor model you can specify your
      * own model here. The only requirement is that it should extend
-     * `Spatie\UptimeMonitor\Models\Monitor`.
+     * `JkOster\CronMonitor\Models\CronMonitor`.
      */
     'monitor_model' => \JkOster\CronMonitor\Models\CronMonitor::class,
 ];

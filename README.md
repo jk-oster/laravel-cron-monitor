@@ -1,4 +1,6 @@
-# Laravel package to monitor external cron jobs similat to spatie uptime monitor
+# Laravel package to monitor external cron jobs
+
+Inspired by spatie/uptime-monitor
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jk-oster/laravel-cron-monitor.svg?style=flat-square)](https://packagist.org/packages/jk-oster/laravel-cron-monitor)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jk-oster/laravel-cron-monitor/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/jk-oster/laravel-cron-monitor/actions?query=workflow%3Arun-tests+branch%3Amain)

@@ -25,7 +25,7 @@ next:
 ---
 
 ::: warning
-🏗️ This Page Under Construction and not 100% ready yet!
+🏗️ This Page Under Construction and not ready for use yet!
 :::
 
 ## Introduction
