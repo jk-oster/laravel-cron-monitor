@@ -1,10 +1,3 @@
----
-title: "Docs"
-description: "Laravel package to monitor external cron jobs similat to spatie uptime monitor"
-sidebar: auto
----
-
-
 # Laravel package to monitor external cron jobs similat to spatie uptime monitor
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jk-oster/laravel-cron-monitor.svg?style=flat-square)](https://packagist.org/packages/jk-oster/laravel-cron-monitor)
