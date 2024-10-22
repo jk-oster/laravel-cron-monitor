@@ -4,7 +4,13 @@ import { defineUserConfig } from 'vuepress'
 
 export default defineUserConfig({
   bundler: viteBundler(),
-  theme: defaultTheme(),
+  theme: defaultTheme({
+    navbar: [
+      { text: 'Code', link: 'https://github.com/jk-oster/laravel-cron-monitor' },
+      { text: 'Author', link: 'https://jakobosterberger.com' },
+      { text: 'Blog', link: 'https://jakobosterberger.com/posts' }
+    ]
+  }),
 
   lang: 'en-US',
   title: 'Cron Monitor for Laravel',
