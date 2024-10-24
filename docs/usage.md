@@ -4,7 +4,7 @@ description: "Generate report and trends from collections."
 editLink: true
 prev:
   text: Installtion & Setup
-  link: /#installation-setup
+  link: /#installation
 next:
   text: Advanced Usage
   link: /advanced-usage.html
@@ -16,7 +16,7 @@ next:
 
 ## Creating a cron monitor
 
-After you've [set up the package](/#installation-setup) you can use the ``cron-monitor:create`` artisan command to monitor an cron job. 
+After you've [set up the package](/#installation) you can use the ``cron-monitor:create`` artisan command to monitor an cron job. 
 
 ```bash
 php artisan cron-monitor:create CronJobName

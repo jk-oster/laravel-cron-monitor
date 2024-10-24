@@ -1,13 +1,12 @@
 ---
-title: "Docs"
+title: "Getting started"
 description: "Laravel package to monitor external cron jobs similat to spatie uptime monitor"
 home: false
-sidebar: "heading"
 footer: "Made with ❤️ by <a href='https://jakobosterberger.com'>Jakob Osterberger</a> (c) 2024"
 footerHtml: true
 actions:
   - text: Get Started
-    link: "/#installation-setup"
+    link: "/#installation"
     type: primary
   - text: Usage Guide
     link: "/usage.html"
@@ -46,7 +45,7 @@ For more details read the [overview](./overview.md) page.
 
 This cron monitor package requires **PHP 8** or higher and **Laravel 8** or higher. The ``php-intl`` must be installed.
 
-## Installation & Setup
+## Installation
 
 This package is meant to be installed into an existing Laravel application.
 If you're not familiar with Laravel head over to the [official documentation](https://laravel.com/docs/) to learn how to set up and use this amazing framework.
@@ -64,6 +63,8 @@ To publish the config file to ``config/cron-monitor.php`` run:
 ```bash
 php artisan vendor:publish --provider="JkOster\CronMonitor\CronMonitorServiceProvider"
 ```
+
+## Configuring Cron Monitor Package
 
 The default contents of the configuration looks like this:
 
@@ -154,7 +155,7 @@ As a last step, run the migrations to create the monitors table.
 php artisan migrate
 ```
 
-### Scheduling
+### Scheduling the health check job
 
 After you have performed the basic installation you can check the health state of your cron jobs using the ``cron-monitor:process-checks`` command.
 

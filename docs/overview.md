@@ -4,7 +4,7 @@ description: "How does the cron monitoring work?"
 editLink: true
 prev:
   text: Installtion & Setup
-  link: /#installation-setup
+  link: /#installation
 next:
   text: Usage Guide
   link: /usage.html
